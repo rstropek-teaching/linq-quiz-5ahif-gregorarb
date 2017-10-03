@@ -3,6 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
+/// <summary>
+/// In Zusammenarbeit mit Alexander Wallner
+/// </summary>
+
 namespace LinqQuiz.Library
 {
     public static class Quiz
@@ -16,7 +20,9 @@ namespace LinqQuiz.Library
         /// </exception>
         public static int[] GetEvenNumbers(int exclusiveUpperLimit)
         {
-            throw new NotImplementedException();
+            return (from num in Enumerable.Range(1,exclusiveUpperLimit-1)
+                        where (num % 2) == 0
+                        select num).ToArray();            
         }
 
         /// <summary>
@@ -33,7 +39,14 @@ namespace LinqQuiz.Library
         /// </remarks>
         public static int[] GetSquares(int exclusiveUpperLimit)
         {
-            throw new NotImplementedException();
+            /// checked: damit OverflowException geworfen wird (overflow checking)
+            return checked(exclusiveUpperLimit > 0 ? (from num in Enumerable.Range(1, exclusiveUpperLimit - 1)
+                                                      where (num % 7) == 0
+                                                      orderby num descending
+                                                      select num * num) :
+                                                     (from num in Enumerable.Range(0, 0)
+                                                      orderby num descending
+                                                      select num)).ToArray();
         }
 
         /// <summary>
@@ -52,7 +65,7 @@ namespace LinqQuiz.Library
         /// </remarks>
         public static FamilySummary[] GetFamilyStatistic(IReadOnlyCollection<IFamily> families)
         {
-            throw new NotImplementedException();
+            return families.Select(family => new FamilySummary { AverageAge = family.Persons.Count() <= 0 ? 0 : family.Persons.Average(person => person.Age), FamilyID = family.ID, NumberOfFamilyMembers = family.Persons.Count() }).ToArray();
         }
 
         /// <summary>
@@ -70,7 +83,11 @@ namespace LinqQuiz.Library
         /// </remarks>
         public static (char letter, int numberOfOccurrences)[] GetLetterStatistic(string text)
         {
-            throw new NotImplementedException();
+            /// 1. Alles in Großbuchstaben umwandeln
+            /// 2. Nur Buchstaben (A-Z) auswählen
+            /// 3. Gruppieren nach Zeichen
+            /// 4. Zeichen auswählen und zählen, wie oft es vorkommt
+            return text.ToUpper().Where(char.IsLetter).GroupBy(l => l).Select(l => (l.Key, l.Count())).ToArray();
         }
     }
 }
