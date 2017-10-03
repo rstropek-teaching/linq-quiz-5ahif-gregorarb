@@ -44,6 +44,7 @@ namespace LinqQuiz.Library
                                                       where (num % 7) == 0
                                                       orderby num descending
                                                       select num * num) :
+                                                     // Why LINQ query? You could simply return an empty array here
                                                      (from num in Enumerable.Range(0, 0)
                                                       orderby num descending
                                                       select num)).ToArray();
